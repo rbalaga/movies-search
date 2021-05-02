@@ -1,6 +1,6 @@
-import "./styles.css";
+import "./styles.scss";
 import data from "./data.json";
-import { getGenres, getTypes, getYears } from "./helpers";
+import { checkGeneres, checkMediaType, checkYear, getGenres, getTypes, getYears, searchMedia } from "./helpers";
 import React, { useState, useEffect } from "react";
 import Card from "./Card";
 import Header from "./Header";
@@ -47,27 +47,15 @@ function App() {
     setSelectedYears([]);
   };
 
-  const checkGeneres = (mediaGenres) => {
-    const machingGenre = mediaGenres.find((media) => selectedGenres.includes(media));
-    return machingGenre !== undefined;
+  const getFilteredMedias = () => {
+    let filteredMedia = selectedGenres.length > 0 ? userData.filter((media) => checkGeneres(selectedGenres, media.genre)) : userData;
+    filteredMedia = selectedYears.length > 0 ? filteredMedia.filter((media) => checkYear(selectedYears, media.year)) : filteredMedia;
+    filteredMedia = selectedType.length > 0 ? filteredMedia.filter((media) => checkMediaType(selectedType, media.type)) : filteredMedia;
+    filteredMedia = searchText.length > 0 ? filteredMedia.filter((media) => searchMedia(searchText, media.title, media.year)) : filteredMedia;
+    return filteredMedia;
   };
 
-  const checkYear = (year) => {
-    return selectedYears.includes(year);
-  };
-
-  const checkMediaType = (type) => {
-    return selectedType === type;
-  };
-
-  const searchMedia = (title, year) => {
-    return title.toUpperCase().indexOf(searchText.toUpperCase()) >= 0 || year.toUpperCase().indexOf(searchText.toUpperCase()) >= 0;
-  };
-
-  let filteredMedia = selectedGenres.length > 0 ? userData.filter((media) => checkGeneres(media.genre)) : userData;
-  filteredMedia = selectedYears.length > 0 ? filteredMedia.filter((media) => checkYear(media.year)) : filteredMedia;
-  filteredMedia = selectedType.length > 0 ? filteredMedia.filter((media) => checkMediaType(media.type)) : filteredMedia;
-  filteredMedia = searchText.length > 0 ? filteredMedia.filter((media) => searchMedia(media.title, media.year)) : filteredMedia;
+  const filteredMedia = getFilteredMedias();
 
   // displaying it onto the page with this code
   return (

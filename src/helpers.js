@@ -62,3 +62,21 @@ export const yearsValueRenderer = (selected, options) => {
   const plural = selected.length === 1 ? "" : "s";
   return `${selected.length} Year${plural}`;
 };
+
+// FILTERING FUNCTIONS FOR MEDIA CARDS.
+export const checkGeneres = (selectedGenres, mediaGenres) => {
+  const machingGenre = mediaGenres.find((media) => selectedGenres.includes(media));
+  return machingGenre !== undefined;
+};
+
+export const checkYear = (selectedYears, year) => {
+  return selectedYears.includes(year);
+};
+
+export const checkMediaType = (selectedType, type) => {
+  return selectedType === type;
+};
+
+export const searchMedia = (searchText, title, year) => {
+  return title.toUpperCase().indexOf(searchText.toUpperCase()) >= 0 || year.toUpperCase().indexOf(searchText.toUpperCase()) >= 0;
+};

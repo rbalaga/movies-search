@@ -2,7 +2,7 @@ import placeHolderImg from "./movie-icon.png";
 
 const Card = (props) => {
   return (
-    <div className="user-container">
+    <div className="card-container">
       <img
         className="media-img"
         alt="posterimage"
