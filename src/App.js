@@ -5,11 +5,8 @@ import React, { useState, useEffect } from "react";
 import Card from "./Card";
 import Header from "./Header";
 
-//import './App.css';
-
 //githuburl variable to = the url
-const gitHubUrl =
-  "https://hubspotwebteam.github.io/CodeExercise/src/js/data/data.json";
+const gitHubUrl = "https://hubspotwebteam.github.io/CodeExercise/src/js/data/data.json";
 
 function App() {
   const [userData, setUserData] = useState([]);
@@ -19,7 +16,7 @@ function App() {
   const [selectedType, setSelectedType] = useState("");
   const [selectedGenres, setSelectedGenres] = useState([]);
   const [selectedYears, setSelectedYears] = useState([]);
-  const [seachText, setSearchText] = useState("");
+  const [searchText, setSearchText] = useState("");
 
   useEffect(() => {
     getGitHubUserWithFetch();
@@ -50,13 +47,35 @@ function App() {
     setSelectedYears([]);
   };
 
+  const checkGeneres = (mediaGenres) => {
+    const machingGenre = mediaGenres.find((media) => selectedGenres.includes(media));
+    return machingGenre !== undefined;
+  };
+
+  const checkYear = (year) => {
+    return selectedYears.includes(year);
+  };
+
+  const checkMediaType = (type) => {
+    return selectedType === type;
+  };
+
+  const searchMedia = (title, year) => {
+    return title.toUpperCase().indexOf(searchText.toUpperCase()) >= 0 || year.toUpperCase().indexOf(searchText.toUpperCase()) >= 0;
+  };
+
+  let filteredMedia = selectedGenres.length > 0 ? userData.filter((media) => checkGeneres(media.genre)) : userData;
+  filteredMedia = selectedYears.length > 0 ? filteredMedia.filter((media) => checkYear(media.year)) : filteredMedia;
+  filteredMedia = selectedType.length > 0 ? filteredMedia.filter((media) => checkMediaType(media.type)) : filteredMedia;
+  filteredMedia = searchText.length > 0 ? filteredMedia.filter((media) => searchMedia(media.title, media.year)) : filteredMedia;
+
   // displaying it onto the page with this code
   return (
     <div className="App">
       <Header
         genres={genres}
         years={years}
-        searchText={seachText}
+        searchText={searchText}
         selectedGenres={selectedGenres}
         selectedYears={selectedYears}
         selectedType={selectedType}
@@ -66,12 +85,10 @@ function App() {
         setSelectedType={setSelectedType}
         clearAllFilters={cleaAllFilters}
       />
-      <div
-        style={{ display: "flex", flexWrap: "wrap", justifyContent: "center" }}
-      >
+      <div className="medialist-container">
         {
           // include the map to filter thru media object
-          userData.map((media) => (
+          filteredMedia.map((media) => (
             <Card key={media.title} {...media} />
           ))
         }

@@ -40,3 +40,25 @@ export const getTypes = (mediaArr) => {
   // removing duplicate types and return
   return removeDuplicates(types);
 };
+
+export const genresValueRenderer = (selected, options) => {
+  if (selected.length === 0) {
+    return "Genres...";
+  }
+  if (selected.length === options.length) {
+    return "All Genres";
+  }
+  const plural = selected.length === 1 ? "" : "s";
+  return `${selected.length} Genre${plural}`;
+};
+
+export const yearsValueRenderer = (selected, options) => {
+  if (selected.length === 0) {
+    return "Years...";
+  }
+  if (selected.length === options.length) {
+    return "All Years";
+  }
+  const plural = selected.length === 1 ? "" : "s";
+  return `${selected.length} Year${plural}`;
+};

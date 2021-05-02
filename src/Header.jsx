@@ -1,172 +1,56 @@
-import MultiSelect, { components } from "react-select";
+import MultiSelect from "@khanacademy/react-multi-select";
+import { genresValueRenderer, yearsValueRenderer } from "./helpers";
+
 const Header = (props) => {
-  const {
-    genres,
-    years,
-    searchText,
-    selectedGenres,
-    selectedYears,
-    selectedType,
-    setSearchText,
-    setSelectedGenres,
-    setSelectedYears,
-    setSelectedType,
-    clearAllFilters
-  } = props;
+  const { genres, years, searchText, selectedGenres, selectedYears, selectedType, setSearchText, setSelectedGenres, setSelectedYears, setSelectedType, clearAllFilters } = props;
   const genreOptions = genres.map((g) => ({ label: g, value: g }));
   const yearOptions = years.map((y) => ({ label: y, value: y }));
 
-  const CustomGenreValueContainer = ({ children, ...props }) => {
-    let [values, input] = children;
-
-    if (Array.isArray(values)) {
-      const plural = values.length === 1 ? "" : "s";
-      values = `${values.length} Genre${plural}`;
-    }
-    // if (input && input.props) {
-    //   document.getElementById(input.props.id).focus();
-    // }
-    // console.log("INPUT FIELD: ", input);
-    return (
-      <components.ValueContainer {...props}>
-        {values}
-        {input}
-      </components.ValueContainer>
-    );
-  };
-
-  const ValueContainer = ({ children, ...props }) => {
-    const { getValue, hasValue } = props;
-    const nbValues = getValue().length;
-    console.log("CHILDREN:", children);
-    if (!hasValue) {
-      return (
-        <components.ValueContainer {...props}>
-          {children}
-        </components.ValueContainer>
-      );
-    } else {
-      children[0] = `${nbValues} items selected`;
-      return (
-        <components.ValueContainer {...props}>
-          {children}
-        </components.ValueContainer>
-      );
-    }
-  };
-
-  const CustomYearValueContainer = ({ children, ...props }) => {
-    let [values, input] = children;
-
-    if (Array.isArray(values)) {
-      const plural = values.length === 1 ? "" : "s";
-      values = `${values.length} Year${plural}`;
-    }
-
-    return (
-      <components.ValueContainer {...props}>
-        {values}
-        {input}
-      </components.ValueContainer>
-    );
-  };
-
   return (
     <header className="App-header">
-      <div
-        className="select-filters"
-        style={{ display: "flex", flexDirection: "row" }}
-      >
-        <div className="dropdown-filters" style={{ display: "flex" }}>
-          <div style={{ marginRight: "10px", width: "200px" }}>
+      <div className="select-filters">
+        <div className="dropdown-filters">
+          <div className="multiselect-sections">
             <MultiSelect
-              isMulti
-              value={selectedGenres}
+              selectAllLabel={false}
+              selected={selectedGenres}
+              isLoading={false}
+              disabled={false}
+              disableSearch={true}
+              valueRenderer={genresValueRenderer}
               options={genreOptions}
-              isClearable={false}
-              closeMenuOnSelect={false}
-              hideSelectedOptions={false}
-              components={{
-                ValueContainer: ValueContainer
-              }}
-              onChange={(values) => {
-                setSelectedGenres(values);
-              }}
+              onSelectedChanged={(values) => setSelectedGenres(values)}
             />
           </div>
-          <div style={{ marginLeft: "10px", width: "200px" }}>
+          <div className="multiselect-sections">
             <MultiSelect
-              isMulti
-              value={selectedYears}
+              selectAllLabel={false}
+              selected={selectedYears}
+              isLoading={false}
+              disabled={false}
+              disableSearch={true}
+              valueRenderer={yearsValueRenderer}
               options={yearOptions}
-              isClearable={false}
-              closeMenuOnSelect={false}
-              hideSelectedOptions={false}
-              components={{
-                ValueContainer: CustomYearValueContainer
-              }}
-              onChange={(values) => {
-                setSelectedYears(values);
-              }}
+              onSelectedChanged={(values) => setSelectedYears(values)}
             />
           </div>
         </div>
-        {/* <select
-          name="select-genres"
-          onChange={(e) => setSelectedGenres(e.target.value)}
-        >
-          {genres.map((genre) => (
-            <option key={genre}>{genre}</option>
-          ))}
-        </select>
-        <select
-          name="select-genres"
-          onChange={(e) => setSelectedYears(e.target.value)}
-        >
-          {years.map((year) => (
-            <option key={year}>{year}</option>
-          ))}
-        </select> */}
       </div>
 
-      <div
-        className="category radio-filters"
-        style={{ display: "flex", flexDirection: "row" }}
-      >
+      <div className="category radio-filters">
         <div>
-          <input
-            type="radio"
-            name="mediaType"
-            id="movies"
-            onChange={() => setSelectedType("movies")}
-          />
-          <label htmlFor="movies">Movies</label>
+          <input type="radio" checked={selectedType === "movie"} name="mediaType" id="movie" onChange={() => setSelectedType("movie")} />
+          <label htmlFor="movie">Movies</label>
         </div>
         <div>
-          <input
-            type="radio"
-            name="mediaType"
-            id="books"
-            onChange={() => setSelectedType("books")}
-          />
-          <label htmlFor="books">Books</label>
+          <input type="radio" checked={selectedType === "book"} name="mediaType" id="book" onChange={() => setSelectedType("book")} />
+          <label htmlFor="book">Books</label>
         </div>
       </div>
 
       <div className="search">
-        <input
-          type="text"
-          value={searchText}
-          onChange={(e) => setSearchText(e.target.value)}
-        />
-        <label
-          style={{
-            color: "blue",
-            textDecorationLine: "underline",
-            cursor: "pointer"
-          }}
-          onClick={clearAllFilters}
-        >
+        <input type="text" value={searchText} onChange={(e) => setSearchText(e.target.value)} />
+        <label className="clear-filters" onClick={clearAllFilters}>
           CLEAR FILTERS
         </label>
       </div>
