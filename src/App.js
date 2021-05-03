@@ -1,5 +1,4 @@
 import "./styles.scss";
-import data from "./data.json";
 import { checkGeneres, checkMediaType, checkYear, getGenres, getTypes, getYears, searchMedia } from "./helpers";
 import React, { useState, useEffect } from "react";
 import Card from "./Card";
@@ -24,9 +23,9 @@ function App() {
 
   // fetching data from the url above
   const getGitHubUserWithFetch = async () => {
-    // const response = await fetch(gitHubUrl);
-    // const jsonData = await response.json();
-    const jsonData = data;
+    const response = await fetch(gitHubUrl);
+    const jsonData = await response.json();
+    // const jsonData = data;
 
     // preparing the values for dropdowns
     const dataYears = getYears(jsonData.media);
